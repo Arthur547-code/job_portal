@@ -1,5 +1,4 @@
-import EmployerSettingForm from "@/features/auth/components/employerComponents/EmployerSettingForm";
-
+import EmployerSettingForm from "@/features/dashboards/employer/employerComponents/EmployerSettingForm";
 import { getCurrentEmployerDetails } from "@/lib/auth/current-employers";
 
 const employerSetting = async () => {

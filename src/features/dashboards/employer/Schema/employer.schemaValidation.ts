@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { industryTypes, companySizes } from "../types/employers.types";
+import { companySizes, industryTypes } from "../../types/employers.types";
 
 const createOptionalUrlField = (customMessage: string) =>
   z

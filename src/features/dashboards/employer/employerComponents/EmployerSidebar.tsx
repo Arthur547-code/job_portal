@@ -12,9 +12,9 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import LogoutButton from "../authComponents/logout/LogoutButton";
-import { type NavItem } from "../../types/employers.types";
 import { cn } from "@/lib/utils";
+import {type NavItem } from "@/features/dashboards/types/employers.types";
+import LogoutButton from "@/features/auth/components/LogoutButton";
 
 const EmployerSidebar = () => {
   const pathname = usePathname();

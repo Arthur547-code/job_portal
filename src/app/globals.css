@@ -2,8 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* we useing this fot tiptap Text editor*/
 @plugin "@tailwindcss/typography";
-
 .tiptap p.is-editor-empty:first-child::before {
   color: #adb5bd;
   content: attr(data-placeholder);
@@ -11,11 +11,14 @@
   height: 0;
   pointer-events: none;
 }
-
 .ProseMirror a {
   color: #2563eb;
   text-decoration: none;
 }
+
+/* we using this for UploadThings image upload */
+@import "uploadthing/tw/v4";
+@source "../node_modules/@uploadthing/react/dist"; /** <-- depends on your project structure */
 
 @custom-variant dark (&:is(.dark *));
 

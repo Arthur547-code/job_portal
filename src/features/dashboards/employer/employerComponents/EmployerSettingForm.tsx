@@ -1,7 +1,6 @@
 "use client";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { companySizes, industryTypes } from "../../types/employers.types";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -26,15 +25,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateEmployerProfile } from "../../Actions/employer.Action";
+
 import toast from "react-hot-toast";
-import {
-  EmployerSchema,
-  EmployerSchemaType,
-} from "../../schema/employer.schemaValidation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import TextEditorSetup from "@/features/textEditor/TextEditorSetup";
+import { UploadButton } from "@/lib/uploadthing";
+import {
+  EmployerSchema,
+  EmployerSchemaType,
+} from "@/features/dashboards/employer/Schema/employer.schemaValidation";
+
+import {
+  companySizes,
+  industryTypes,
+} from "@/features/dashboards/types/employers.types";
+import { updateEmployerProfile } from "../Actions/employer.Action";
 
 type EmployerSettingFormProps = {
   initialData?: Partial<EmployerSchemaType>;
@@ -87,6 +94,30 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
         <Card className="border shadow-sm">
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {/* Upload Image */}
+              <div className="space-y-2">
+                <UploadButton
+                  endpoint="imageUploader"
+                  appearance={{
+                    button:
+                      "ut-ready:bg-blue-500 ut-uploading:cursor-not-allowed rounded-r-none bg-red-500 bg-none after:bg-orange-400",
+                    container:
+                      "w-max flex-row rounded-md border-cyan-300 bg-slate-800",
+                    allowedContent:
+                      "flex h-8 flex-col items-center justify-center px-2 text-white",
+                  }}
+                  onClientUploadComplete={(res) => {
+                    // Do something with the response
+                    console.log("Files: ", res);
+                    alert("Upload Completed");
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    alert(`ERROR! ${error.message}`);
+                  }}
+                />
+              </div>
+
               {/* Company Name */}
               <div className="space-y-2">
                 <Label htmlFor="companyName">Company Name *</Label>

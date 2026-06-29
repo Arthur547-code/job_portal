@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import {
   EmployerSchema,
   EmployerSchemaType,
-} from "../schema/employer.schemaValidation";
+} from "../Schema/employer.schemaValidation";
 
 export const updateEmployerProfile = async (
   data: EmployerSchemaType,
