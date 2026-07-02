@@ -1,9 +1,10 @@
-import EmployersProfileStatus from "@/features/auth/components/employerComponents/EmployersProfileStatus";
-import EmployerStats from "@/features/auth/components/employerComponents/EmployerStats";
+
+import EmployersProfileStatus from "@/features/dashboards/employer/employerComponents/EmployersProfileStatus";
+import EmployerStats from "@/features/dashboards/employer/employerComponents/EmployerStats";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 
-const Empolyee = async () => {
+const Employee = async () => {
   const user = await getCurrentUser();
 
   if (!user) return redirect("/login");
@@ -25,4 +26,4 @@ const Empolyee = async () => {
   );
 };
 
-export default Empolyee;
+export default Employee;
