@@ -55,10 +55,14 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
     register,
     control,
     formState: { errors, isDirty, isSubmitting },
+    watch,
+    setValue,
   } = useForm<EmployerSchemaType>({
     defaultValues: initialData,
     resolver: zodResolver(EmployerSchema),
   });
+
+  const currentImgUsfUrl = watch("companyLogo");
 
   const onSubmit: SubmitHandler<EmployerSchemaType> = async (data) => {
     try {
@@ -108,8 +112,20 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                   }}
                   onClientUploadComplete={(res) => {
                     // Do something with the response
+                    if (!res || !res[0]) return;
+
                     console.log("Files: ", res);
-                    toast.success("Upload Completed");
+                    console.log("Files: ", res[0].ufsUrl);
+                    console.log("Files: ", currentImgUsfUrl);
+
+                    setValue("companyLogo", res[0].ufsUrl, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    });
+                    toast.success(
+                      "Logo uploaded successfully. Click 'Save Changes' to update your profile.",
+                    );
                   }}
                   onUploadError={(error: Error) => {
                     // Do something with the error.
