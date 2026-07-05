@@ -42,6 +42,7 @@ import {
   industryTypes,
 } from "@/features/dashboards/types/employers.types";
 import { updateEmployerProfile } from "../Actions/employer.Action";
+import ImageUpload from "./ImageUpload";
 
 type EmployerSettingFormProps = {
   initialData?: Partial<EmployerSchemaType>;
@@ -99,40 +100,31 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Upload Image */}
-              <div className="space-y-2">
-                <UploadButton
-                  endpoint="imageUploader"
-                  appearance={{
-                    button:
-                      "ut-ready:bg-blue-500 ut-uploading:cursor-not-allowed rounded-r-none bg-red-500 bg-none after:bg-orange-400",
-                    container:
-                      "w-max flex-row rounded-md border-cyan-300 bg-slate-800",
-                    allowedContent:
-                      "flex h-8 flex-col items-center justify-center px-2 text-white",
-                  }}
-                  onClientUploadComplete={(res) => {
-                    // Do something with the response
-                    if (!res || !res[0]) return;
 
-                    console.log("Files: ", res);
-                    console.log("Files: ", res[0].ufsUrl);
-                    console.log("Files: ", currentImgUsfUrl);
-
-                    setValue("companyLogo", res[0].ufsUrl, {
-                      shouldValidate: true,
-                      shouldDirty: true,
-                      shouldTouch: true,
-                    });
-                    toast.success(
-                      "Logo uploaded successfully. Click 'Save Changes' to update your profile.",
-                    );
-                  }}
-                  onUploadError={(error: Error) => {
-                    // Do something with the error.
-                    toast.error(`ERROR! ${error.message}`);
-                  }}
-                />
-              </div>
+              <Controller
+                control={control}
+                name="companyLogo"
+                render={({ field, fieldState }) => (
+                  <div className="space-y-2">
+                    <Label>Company Logo</Label>
+                    <ImageUpload
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      descriptions={"Upload your company logo"}
+                      className={cn(
+                        fieldState.error &&
+                          "ring-1 ring-destructive/50 rounded-lg",
+                        "h-64 w-64",
+                      )}
+                    />
+                    {fieldState.error && (
+                      <p className="text-sm text-destructive">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+              />
 
               {/* Company Name */}
               <div className="space-y-2">
