@@ -31,7 +31,6 @@ import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import TextEditorSetup from "@/features/textEditor/TextEditorSetup";
-import { UploadButton } from "@/lib/uploadthing";
 import {
   EmployerSchema,
   EmployerSchemaType,
@@ -56,14 +55,10 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
     register,
     control,
     formState: { errors, isDirty, isSubmitting },
-    watch,
-    setValue,
   } = useForm<EmployerSchemaType>({
     defaultValues: initialData,
     resolver: zodResolver(EmployerSchema),
   });
-
-  const currentImgUsfUrl = watch("companyLogo");
 
   const onSubmit: SubmitHandler<EmployerSchemaType> = async (data) => {
     try {
@@ -84,7 +79,7 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
   };
 
   return (
-    <div className="w-full px-4 py-6 sm:px-6 lg:px-8">
+    <div className="w-full px-4 py-6 sm:px-6 lg:px-8 flex flex-col gap-6 flex-wrap">
       <div className="mx-auto max-w-4xl">
         {/* Header */}
         <div className="mb-8">
@@ -99,32 +94,61 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
         <Card className="border shadow-sm">
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Upload Image */}
+              <div className="flex gap-5 ">
+                {/* Upload Company Logo */}
 
-              <Controller
-                control={control}
-                name="companyLogo"
-                render={({ field, fieldState }) => (
-                  <div className="space-y-2">
-                    <Label>Company Logo</Label>
-                    <ImageUpload
-                      value={field.value ?? ""}
-                      onChange={field.onChange}
-                      descriptions={"Upload your company logo"}
-                      className={cn(
-                        fieldState.error &&
-                          "ring-1 ring-destructive/50 rounded-lg",
-                        "h-64 w-64",
+                <Controller
+                  control={control}
+                  name="companyLogo"
+                  render={({ field, fieldState }) => (
+                    <div className="space-y-2">
+                      <Label>Company Logo</Label>
+                      <ImageUpload
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        descriptions={"Upload your company logo"}
+                        className={cn(
+                          fieldState.error &&
+                            "ring-1 ring-destructive/50 rounded-lg",
+                          "h-64 w-64",
+                        )}
+                      />
+                      {fieldState.error && (
+                        <p className="text-sm text-destructive">
+                          {fieldState.error.message}
+                        </p>
                       )}
-                    />
-                    {fieldState.error && (
-                      <p className="text-sm text-destructive">
-                        {fieldState.error.message}
-                      </p>
-                    )}
-                  </div>
-                )}
-              />
+                    </div>
+                  )}
+                />
+
+                {/* Upload Banner Image */}
+
+                <Controller
+                  control={control}
+                  name="companyBannerUrl"
+                  render={({ field, fieldState }) => (
+                    <div className="space-y-2">
+                      <Label>Company Banner</Label>
+                      <ImageUpload
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        descriptions={"Upload your company banner image"}
+                        className={cn(
+                          fieldState.error &&
+                            "ring-1 ring-destructive/50 rounded-lg",
+                          "h-64 w-137",
+                        )}
+                      />
+                      {fieldState.error && (
+                        <p className="text-sm text-destructive">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
+              </div>
 
               {/* Company Name */}
               <div className="space-y-2">
