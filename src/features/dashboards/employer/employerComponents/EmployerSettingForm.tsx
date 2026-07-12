@@ -5,7 +5,6 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 
 import {
@@ -42,6 +41,7 @@ import {
 } from "@/features/dashboards/types/employers.types";
 import { updateEmployerProfile } from "../Actions/employer.Action";
 import ImageUpload from "./ImageUpload";
+import { useRouter } from "next/navigation";
 
 type EmployerSettingFormProps = {
   initialData?: Partial<EmployerSchemaType>;
@@ -54,54 +54,62 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
     handleSubmit,
     register,
     control,
+    reset,
     formState: { errors, isDirty, isSubmitting },
   } = useForm<EmployerSchemaType>({
     defaultValues: initialData,
     resolver: zodResolver(EmployerSchema),
   });
 
+  const router = useRouter();
+
   const onSubmit: SubmitHandler<EmployerSchemaType> = async (data) => {
     try {
-      await toast.promise(updateEmployerProfile(data), {
+      const res = await toast.promise(updateEmployerProfile(data), {
         loading: "Updating company profile...",
         success: (res) => {
           if (!res.success) {
             throw new Error(res.message);
           }
-
           return "Company profile updated successfully!";
         },
         error: (err) => err.message || "Server error",
       });
+
+      if (res.success) {
+        // Production Trick: data pass karne se form reset ho jata hai aur isDirty false ho jata hai.
+        // Isse button automatically disable ho jayega submit hote hi!
+        router.push("/employee");
+        reset(data);
+      }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
   return (
-    <div className="w-full px-4 py-6 sm:px-6 lg:px-8 flex flex-col gap-6 flex-wrap">
-      <div className="mx-auto max-w-4xl">
+    <div className="w-full px-4 py-6 sm:px-6 lg:px-6 flex flex-col gap-6 flex-wrap">
+      <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Company Profile</h1>
-
           <p className="text-muted-foreground mt-2">
             Complete your company information to start posting jobs and attract
             the right candidates.
           </p>
         </div>
 
-        <Card className="border shadow-sm">
-          <CardContent className="p-6 sm:p-8">
+        <Card className="border shadow-sm max-w-full">
+          <CardContent className="p-6 sm:p-5 overflow-hidden">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="flex gap-5 ">
+              {/* Logos & Banners Row */}
+              <div className="flex flex-col gap-5 sm:flex-row">
                 {/* Upload Company Logo */}
-
                 <Controller
                   control={control}
                   name="companyLogo"
                   render={({ field, fieldState }) => (
-                    <div className="space-y-2">
+                    <div className="space-y-2 flex-1">
                       <Label>Company Logo</Label>
                       <ImageUpload
                         value={field.value ?? ""}
@@ -110,7 +118,7 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                         className={cn(
                           fieldState.error &&
                             "ring-1 ring-destructive/50 rounded-lg",
-                          "h-64 w-64",
+                          "h-56 w-full sm:w-64",
                         )}
                       />
                       {fieldState.error && (
@@ -123,12 +131,11 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                 />
 
                 {/* Upload Banner Image */}
-
                 <Controller
                   control={control}
                   name="companyBannerUrl"
                   render={({ field, fieldState }) => (
-                    <div className="space-y-2">
+                    <div className="space-y-2 flex-2">
                       <Label>Company Banner</Label>
                       <ImageUpload
                         value={field.value ?? ""}
@@ -137,7 +144,7 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                         className={cn(
                           fieldState.error &&
                             "ring-1 ring-destructive/50 rounded-lg",
-                          "h-64 w-137",
+                          "h-56 w-full sm:w-96",
                         )}
                       />
                       {fieldState.error && (
@@ -153,15 +160,13 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
               {/* Company Name */}
               <div className="space-y-2">
                 <Label htmlFor="companyName">Company Name *</Label>
-
                 <div
                   className={cn(
-                    "flex items-center rounded-md border px-3",
+                    "flex items-center rounded-md border px-3 transition-colors focus-within:ring-1 focus-within:ring-primary",
                     errors.companyName ? "border-red-500" : "border-input",
                   )}
                 >
                   <Building2 className="text-muted-foreground mr-3 h-4 w-4" />
-
                   <Input
                     id="companyName"
                     type="text"
@@ -170,46 +175,14 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                     {...register("companyName")}
                   />
                 </div>
-
                 {errors.companyName && (
                   <p className="text-destructive text-sm">
                     {errors.companyName.message}
                   </p>
                 )}
               </div>
-              {/* Company Description */}
-              <div className="space-y-2">
-                <Label htmlFor="companyDescription">
-                  Company Description *
-                </Label>
 
-                <div
-                  className={cn(
-                    "flex items-start rounded-md border px-3 py-2",
-                    errors.companyDescription
-                      ? "border-red-500"
-                      : "border-input",
-                  )}
-                >
-                  <FileText className="text-muted-foreground mt-3 mr-3 h-4 w-4 shrink-0" />
-
-                  <Textarea
-                    id="companyDescription"
-                    placeholder="Tell candidates about your company..."
-                    className="min-h-35 border-0 shadow-none focus-visible:ring-0"
-                    {...register("companyDescription")}
-                  />
-                </div>
-
-                {errors.companyDescription && (
-                  <p className="text-destructive text-sm">
-                    {errors.companyDescription.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Text Editor */}
-
+              {/* Company Description with Tiptap */}
               <div className="space-y-2">
                 <Label
                   htmlFor="companyDescription"
@@ -218,7 +191,6 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                   <FileText className="h-4 w-4" />
                   Company Description *
                 </Label>
-
                 <div className="border-input overflow-hidden rounded-lg border">
                   <Controller
                     control={control}
@@ -231,7 +203,6 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                     )}
                   />
                 </div>
-
                 {errors.companyDescription && (
                   <p className="text-destructive text-sm">
                     {errors.companyDescription.message}
@@ -239,11 +210,10 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                 )}
               </div>
 
-              {/* industryType */}
+              {/* Industry Type & Company Size */}
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Industry Type</Label>
-
                   <Controller
                     name="industryType"
                     control={control}
@@ -261,7 +231,6 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                           <Briefcase className="text-muted-foreground mr-3 h-4 w-4" />
                           <SelectValue placeholder="Select industry type" />
                         </SelectTrigger>
-
                         <SelectContent>
                           {industryTypes.map((type) => (
                             <SelectItem key={type} value={type}>
@@ -272,7 +241,6 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                       </Select>
                     )}
                   />
-
                   {errors.industryType && (
                     <p className="text-destructive text-sm">
                       {errors.industryType.message}
@@ -280,11 +248,8 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                   )}
                 </div>
 
-                {/* Company Size */}
-
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <Label htmlFor="companySize">Company Size</Label>
-
                   <Controller
                     name="companySize"
                     control={control}
@@ -297,7 +262,6 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                           <User className="text-muted-foreground mr-3 h-4 w-4" />
                           <SelectValue placeholder="Select Company Size" />
                         </SelectTrigger>
-
                         <SelectContent>
                           {companySizes.map((type) => (
                             <SelectItem key={type} value={type}>
@@ -315,20 +279,18 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                   )}
                 </div>
               </div>
-              {/* Grid */}
+
+              {/* Year, Location & Website */}
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                {/* Establishment Year */}
                 <div className="space-y-2">
                   <Label>Establishment Year *</Label>
-
                   <div
                     className={cn(
-                      "flex items-center rounded-md border px-3",
+                      "flex items-center rounded-md border px-3 focus-within:ring-1 focus-within:ring-primary",
                       errors.companyEstablishmentYear && "border-red-500",
                     )}
                   >
                     <CalendarDays className="text-muted-foreground mr-3 h-4 w-4" />
-
                     <Input
                       type="number"
                       placeholder="2020"
@@ -338,25 +300,22 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                       })}
                     />
                   </div>
-
                   {errors.companyEstablishmentYear && (
                     <p className="text-destructive text-sm">
                       {errors.companyEstablishmentYear.message}
                     </p>
                   )}
                 </div>
-                {/* Location */}
+
                 <div className="space-y-2">
                   <Label htmlFor="location">Location *</Label>
-
                   <div
                     className={cn(
-                      "flex items-center rounded-md border px-3",
+                      "flex items-center rounded-md border px-3 focus-within:ring-1 focus-within:ring-primary",
                       errors.location ? "border-red-500" : "border-input",
                     )}
                   >
                     <MapPin className="text-muted-foreground mr-3 h-4 w-4" />
-
                     <Input
                       id="location"
                       placeholder="Patna, Bihar"
@@ -371,22 +330,19 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                   )}
                 </div>
 
-                {/* Company Website */}
-                <div className="space-y-2">
+                <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="companyWebsiteUrl">
                     Company Website (Optional)
                   </Label>
-
                   <div
                     className={cn(
-                      "flex items-center rounded-md border px-3",
+                      "flex items-center rounded-md border px-3 focus-within:ring-1 focus-within:ring-primary",
                       errors.companyWebsiteUrl
                         ? "border-red-500"
                         : "border-input",
                     )}
                   >
                     <Globe className="text-muted-foreground mr-3 h-4 w-4" />
-
                     <Input
                       id="companyWebsiteUrl"
                       type="url"
@@ -395,25 +351,33 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
                       {...register("companyWebsiteUrl")}
                     />
                   </div>
-                </div>
-                {errors.companyWebsiteUrl && (
-                  <p className="text-destructive text-sm">
-                    {errors.companyWebsiteUrl.message}
-                  </p>
-                )}
-              </div>
-              {/* Submit */}
-              <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-                <Button type="submit" disabled={isSubmitting || !isDirty}>
-                  {isSubmitting && (
-                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  {errors.companyWebsiteUrl && (
+                    <p className="text-destructive text-sm">
+                      {errors.companyWebsiteUrl.message}
+                    </p>
                   )}
+                </div>
+              </div>
 
-                  {isSubmitting ? "Saving..." : "Save Changes"}
+              {/* Submit Button Section */}
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || !isDirty}
+                  className="w-full sm:w-auto min-w-30"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Changes"
+                  )}
                 </Button>
 
-                {isDirty && (
-                  <p className="text-sm text-green-500">
+                {isDirty && !isSubmitting && (
+                  <p className="text-sm text-amber-500 font-medium animate-pulse">
                     You have unsaved changes.
                   </p>
                 )}
