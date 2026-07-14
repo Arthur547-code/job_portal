@@ -4,7 +4,7 @@ import { sessionsTable } from "@/drizzle/schema";
 import crypto from "crypto";
 
 import { type CreateSessionInDB } from "@/features/auth/types/auth.types";
-import { SESSION_TIME } from "@/features/auth.constants";
+import { SESSION_TIME } from "@/features/auth/auth.constants";
 
 import { eq } from "drizzle-orm";
 

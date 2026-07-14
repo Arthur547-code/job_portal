@@ -1,5 +1,5 @@
 import { config } from "@/config/config";
-import { SESSION_TIME } from "@/features/auth.constants";
+import { SESSION_TIME } from "@/features/auth/auth.constants";
 import { SessionTokenPayload } from "@/features/auth/types/auth.types";
 import jwt from "jsonwebtoken";
 

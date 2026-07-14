@@ -19,14 +19,9 @@ import { cn } from "@/lib/utils";
 import { useDropzone } from "@uploadthing/react";
 import { Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
-import { ComponentProps, useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
-
-type ImageUploadProps = Omit<ComponentProps<"div">, "onChange"> & {
-  onChange: (value: string) => void;
-  value: string;
-  descriptions?: string;
-};
+import { ImageUploadProps } from "./types/types";
 
 const ImageUpload = ({
   onChange,

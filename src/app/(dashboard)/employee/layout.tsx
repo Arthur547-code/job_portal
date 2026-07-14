@@ -30,7 +30,7 @@ export default async function dashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen w-full bg-background">
       <NextSSRPlugin
         /**
          * The `extractRouterConfig` will extract **only** the route configs
@@ -40,9 +40,17 @@ export default async function dashboardLayout({
          */
         routerConfig={extractRouterConfig(ourFileRouter)}
       />
+
+      {/* Sidebar Component */}
       <EmployerSidebar />
 
-      <main className="container mx-auto mt-5 ml-72 mr-5">{children}</main>
+      {/* MAIN VIEWPORT WRAPPER: Responsive spacing fixes */}
+      {/* lg:pl-64 lagane se desktop par sidebar ki width preserve hogi, aur pt-16 mobile view par content ko top header button ke neeche push karega */}
+      <main className="flex-1 lg:pl-64 w-full pt-16 lg:pt-0 flex flex-col">
+        <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 flex-1 flex items-center justify-center">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }

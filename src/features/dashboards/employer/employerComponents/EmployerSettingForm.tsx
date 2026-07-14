@@ -40,7 +40,7 @@ import {
   industryTypes,
 } from "@/features/dashboards/types/employers.types";
 import { updateEmployerProfile } from "../Actions/employer.Action";
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "../../../uploadThings/ImageUpload";
 import { useRouter } from "next/navigation";
 
 type EmployerSettingFormProps = {
@@ -88,7 +88,7 @@ const EmployerSettingForm: React.FC<EmployerSettingFormProps> = ({
   };
 
   return (
-    <div className="w-full px-4 py-6 sm:px-6 lg:px-6 flex flex-col gap-6 flex-wrap">
+    <div className="w-full bg-yellow-500 px-4 py-6 sm:px-6 lg:px-6 flex flex-col gap-6 flex-wrap">
       <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-8">

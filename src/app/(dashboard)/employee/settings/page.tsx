@@ -5,7 +5,7 @@ const employerSetting = async () => {
   const employer = await getCurrentEmployerDetails();
 
   return (
-    <>
+    <div className="space-y-6">
       <EmployerSettingForm
         initialData={{
           companyName: employer?.employerDetails?.companyName ?? "",
@@ -29,7 +29,7 @@ const employerSetting = async () => {
           location: employer?.employerDetails?.location ?? "",
         }}
       />
-    </>
+    </div>
   );
 };
 
