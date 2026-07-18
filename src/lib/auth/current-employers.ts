@@ -1,7 +1,7 @@
 import { db } from "@/config/db";
 import { getCurrentUser } from "./current-user";
-import { employersTable } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
+import { employersTable } from "@/drizzle/schema";
 
 export const getCurrentEmployerDetails = async () => {
   const currentUser = await getCurrentUser();
@@ -26,7 +26,7 @@ export const getCurrentEmployerDetails = async () => {
   const allFieldsRequired = [
     employer.companyName,
     employer.companySize,
-    employer.companyWebsiteUrl,
+    // employer.companyWebsiteUrl,
     employer.companyLogo,
     employer.companyDescription,
     employer.companyEstablishmentYear,

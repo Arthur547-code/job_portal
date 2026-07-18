@@ -1,12 +1,13 @@
 import { cookies } from "next/headers";
 import { db } from "@/config/db";
-import { sessionsTable } from "@/drizzle/schema";
+
 import crypto from "crypto";
 
 import { type CreateSessionInDB } from "@/features/auth/types/auth.types";
 import { SESSION_TIME } from "@/features/auth/auth.constants";
 
 import { eq } from "drizzle-orm";
+import { sessionsTable } from "@/drizzle/schema";
 
 export const createSessionInDB = async ({
   sessionId,
@@ -16,14 +17,9 @@ export const createSessionInDB = async ({
   userAgent,
   dbClient,
 }: CreateSessionInDB) => {
-  const expiresAt = new Date(
-    Date.now() + SESSION_TIME * 1000,
-  );
+  const expiresAt = new Date(Date.now() + SESSION_TIME * 1000);
 
-  const hashToken = crypto
-    .createHash("sha256")
-    .update(token)
-    .digest("hex");
+  const hashToken = crypto.createHash("sha256").update(token).digest("hex");
 
   await dbClient.insert(sessionsTable).values({
     id: sessionId,
@@ -37,9 +33,7 @@ export const createSessionInDB = async ({
   return token;
 };
 
-export const setSessionCookie = async (
-  token: string,
-) => {
+export const setSessionCookie = async (token: string) => {
   const cookieStore = await cookies();
 
   cookieStore.set("sessionToken", token, {
@@ -50,7 +44,6 @@ export const setSessionCookie = async (
     path: "/",
   });
 };
-
 
 export const deleteSessionFromDB = async (sessionId: string) => {
   await db.delete(sessionsTable).where(eq(sessionsTable.id, sessionId));

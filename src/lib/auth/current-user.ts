@@ -4,10 +4,10 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 import { getTokenPayload } from "./jwt";
 import { db } from "@/config/db";
-import { sessionsTable, userTable } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { deleteSessionFromDB } from "./session";
 import { SESSION_TIME, SESSION_TIME_HALF } from "@/features/auth/auth.constants";
+import { sessionsTable, userTable } from "@/drizzle/schema";
 
 export const getCurrentUser = cache(async () => {
   const cookie = await cookies();

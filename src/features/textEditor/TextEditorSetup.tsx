@@ -42,7 +42,7 @@ const TextEditorSetup = ({ content, onChange }: TextEditorProps) => {
         className="prose dark:prose-invert prose-sm sm:prose-base focus:outline-none max-w-none min-h-37.5 p-2"
       />
       <TextEditorBubbleMenu
-        className="bg-white zoom-in-50 rounded-lg"
+        className="bg-white z-50 zoom-in-50 rounded-lg"
         editor={editor}
       >
         <BubbleMenu editor={editor} />

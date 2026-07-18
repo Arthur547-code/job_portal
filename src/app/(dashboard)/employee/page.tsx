@@ -1,6 +1,6 @@
 
-import EmployersProfileStatus from "@/features/dashboards/employer/employerComponents/EmployersProfileStatus";
-import EmployerStats from "@/features/dashboards/employer/employerComponents/EmployerStats";
+import EmployersProfileStatus from "@/features/dashboards/employer/Components/EmployersProfileStatus";
+import EmployerStats from "@/features/dashboards/employer/Components/EmployerStats";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { redirect } from "next/navigation";
 

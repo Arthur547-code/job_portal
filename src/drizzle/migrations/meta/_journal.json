@@ -8,6 +8,13 @@
       "when": 1781785587459,
       "tag": "0000_wild_wilson_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1784393341258,
+      "tag": "0001_jazzy_magik",
+      "breakpoints": true
     }
   ]
 }

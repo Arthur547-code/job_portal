@@ -6,7 +6,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 
-import EmployerSidebar from "@/features/dashboards/employer/employerComponents/EmployerSidebar";
+import EmployerSidebar from "@/features/dashboards/employer/Components/EmployerSidebar";
 
 export const metadata: Metadata = {
   title: "Employee Dashboard",
